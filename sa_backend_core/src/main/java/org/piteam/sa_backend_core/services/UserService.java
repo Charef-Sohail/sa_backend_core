@@ -6,6 +6,7 @@ import org.piteam.sa_backend_core.dto.LoginResponse;
 import org.piteam.sa_backend_core.dto.RegisterRequest;
 import org.piteam.sa_backend_core.dto.RegisterResponse;
 import org.piteam.sa_backend_core.exceptions.EmailAlreadyExistsException;
+import org.piteam.sa_backend_core.exceptions.InvalidCredentialsException;
 import org.piteam.sa_backend_core.models.Student;
 import org.piteam.sa_backend_core.models.User;
 import org.piteam.sa_backend_core.repositories.UserRepository;
@@ -43,10 +44,10 @@ public class UserService {
     }
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid email or password");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
