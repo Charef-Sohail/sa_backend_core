@@ -2,6 +2,8 @@ package org.piteam.sa_backend_core.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.piteam.sa_backend_core.dto.LoginRequest;
+import org.piteam.sa_backend_core.dto.LoginResponse;
 import org.piteam.sa_backend_core.dto.RegisterRequest;
 import org.piteam.sa_backend_core.dto.RegisterResponse;
 import org.piteam.sa_backend_core.services.UserService;
@@ -22,5 +24,11 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         RegisterResponse response = userService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = userService.login(request);
+        return ResponseEntity.ok(response);
     }
 }
