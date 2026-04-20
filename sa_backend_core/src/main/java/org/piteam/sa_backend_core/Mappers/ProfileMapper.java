@@ -10,9 +10,9 @@ import java.util.List;
 
 @Component
 public class ProfileMapper {
-    public Profile toEntity(ProfileCreateRequest req) {
+    public Profile toEntity(ProfileCreateRequest req, String studentId) {
         return Profile.builder()
-                .studentId(req.getStudentId())
+                .studentId(studentId)
                 .sleepHours(req.getSleepHours())
                 .availability(req.getAvailability() != null ? req.getAvailability() : List.of())
                 .baselineEnergy(req.getBaselineEnergy())

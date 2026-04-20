@@ -7,53 +7,55 @@ import org.piteam.sa_backend_core.dto.ScheduleResponse;
 import org.piteam.sa_backend_core.dto.ScheduleUpdateRequest;
 import org.piteam.sa_backend_core.services.ScheduleService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
-@RestController @RequestMapping("/api/student/{studentId}/schedules") @RequiredArgsConstructor
+@RestController @RequestMapping("/api/schedules") @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
 
-    @PostMapping("/newSchedule")
-    public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleCreateRequest request, @PathVariable String studentId) {
-        ScheduleResponse created = scheduleService.createSchedule(request);
-        URI location = URI.create("/api/student/"+studentId+"/schedules/" + created.getId());
+    @PostMapping
+    public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleCreateRequest request, Authentication authentication) {
+        String studentId = authentication.getName();
+        ScheduleResponse created = scheduleService.createSchedule(request, studentId);
+        URI location = URI.create("/api/schedules/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 
     @GetMapping
-    public ResponseEntity<List<ScheduleResponse>> getStudentSchedules(@PathVariable String studentId) {
+    public ResponseEntity<List<ScheduleResponse>> getStudentSchedules(Authentication authentication) {
+        String studentId = authentication.getName();
         return ResponseEntity.ok(scheduleService.getSchedulesByStudent(studentId));
     }
 
-//    @GetMapping("/task/{taskId}")
-//    public ResponseEntity<List<ScheduleResponse>> getTaskSchedules(@PathVariable String taskId) {
-//        return ResponseEntity.ok(scheduleService.getSchedulesByTask(taskId));
-//    }
-
     @GetMapping("/task/{taskId}")
-    public ResponseEntity<List<ScheduleResponse>> getStudentTaskSchedules(@PathVariable String taskId,  @PathVariable String studentId) {
+    public ResponseEntity<List<ScheduleResponse>> getStudentTaskSchedules(@PathVariable String taskId,  Authentication authentication) {
+        String studentId = authentication.getName();
         return ResponseEntity.ok(scheduleService.getSchedulesByStudentAndTask(studentId, taskId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponse> getSchedule(@PathVariable String id) {
-        return ResponseEntity.ok(scheduleService.getScheduleById(id));
+    public ResponseEntity<ScheduleResponse> getSchedule(@PathVariable String id, Authentication authentication) {
+        String studentId = authentication.getName();
+        return ResponseEntity.ok(scheduleService.getScheduleByIdAndStudentId(id, studentId));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponse> updateSchedule(
             @PathVariable String id,
             @Valid @RequestBody ScheduleUpdateRequest request,
-            @PathVariable String studentId) { // 🔐 Passé en paramètre (à remplacer par @AuthenticationPrincipal en prod avec @RequestParam)
+            Authentication authentication) {
+        String studentId = authentication.getName();
         return ResponseEntity.ok(scheduleService.updateSchedule(id, request, studentId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable String id, @PathVariable String studentId) {
+    public ResponseEntity<Void> deleteSchedule(@PathVariable String id, Authentication authentication) {
+        String studentId = authentication.getName();
         scheduleService.deleteSchedule(id, studentId);
         return ResponseEntity.noContent().build();
     }

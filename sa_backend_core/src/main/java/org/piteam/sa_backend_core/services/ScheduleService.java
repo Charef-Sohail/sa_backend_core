@@ -25,18 +25,18 @@ public class ScheduleService {
     private final ScheduleMapper scheduleMapper;
 
     @Transactional
-    public ScheduleResponse createSchedule(ScheduleCreateRequest request) {
+    public ScheduleResponse createSchedule(ScheduleCreateRequest request, String studentId) {
 
         // Validation : la tâche existe ET appartient au même étudiant
         Task task = taskRepository.findById(request.getTaskId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tâche non trouvée "+ request.getTaskId()));
 
-        if (!task.getStudentId().equals(request.getStudentId())) {
-            throw new IllegalArgumentException("Le planning ne peut être associé à une tâche d'un autre étudiant");
+        if (!task.getStudentId().equals(studentId)) {
+            throw new SecurityException("Le planning ne peut être associé à une tâche d'un autre étudiant");
         }
 
         // Création
-        Schedule schedule = scheduleMapper.toEntity(request);
+        Schedule schedule = scheduleMapper.toEntity(request, studentId);
         if(!schedule.isTimeRangeValid()){
             throw new IllegalStateException("TimeRange non valid");
         }
@@ -74,9 +74,12 @@ public class ScheduleService {
         return scheduleMapper.toResponseListWithTaskTitles(schedules, taskTitles);
     }
 
-    public ScheduleResponse getScheduleById(String id) {
+    public ScheduleResponse getScheduleByIdAndStudentId(String id, String studentId) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule non trouvé "+ id));
+        if (!schedule.getStudentId().equals(studentId)) {
+            throw new SecurityException("Accès refusé : ce planning ne vous appartient pas");
+        }
         Task task = taskRepository.findById(schedule.getTaskId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tâche non trouvée "+ schedule.getTaskId()));
         return scheduleMapper.toResponseWithTaskTitle(schedule, task.getTitle());
@@ -126,17 +129,11 @@ public class ScheduleService {
         }
 
         Schedule updated = scheduleRepository.save(existing);
-
-        // Enrichissement avec le titre de la tâche
-//        String taskTitle = taskRepository.findById(existing.getTaskId())
-//                .map(Task::getTitle).orElse("Tâche inconnue");
-
         return scheduleMapper.toResponseWithTaskTitle(updated, task.getTitle());
     }
 
     @Transactional
     public void deleteSchedule(String id, String studentId) {
-        //log.info("Suppression planning: id={}", id);
 
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Schedule non trouvé "+ id));

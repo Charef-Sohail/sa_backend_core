@@ -11,9 +11,9 @@ import java.util.Map;
 
 @Component
 public class ScheduleMapper {
-    public Schedule toEntity(ScheduleCreateRequest req) {
+    public Schedule toEntity(ScheduleCreateRequest req, String studentId) {
         return Schedule.builder()
-                .studentId(req.getStudentId())
+                .studentId(studentId)
                 .taskId(req.getTaskId())
                 .startTime(req.getStartTime())
                 .endTime(req.getEndTime())

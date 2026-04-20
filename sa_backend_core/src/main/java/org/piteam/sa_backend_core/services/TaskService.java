@@ -24,15 +24,17 @@ public class TaskService {
 
 
     @Transactional
-    public TaskResponse createTask(TaskCreateRequest request) {
-        //log.info("Création tâche: {}", request.getTitle());
-        Task saved = taskRepository.save(taskMapper.toEntity(request));
+    public TaskResponse createTask(TaskCreateRequest request, String studentId) {
+        Task saved = taskRepository.save(taskMapper.toEntity(request, studentId));
         return taskMapper.toResponse(saved);
     }
 
-    public TaskResponse getTaskById(String id) {
+    public TaskResponse getTaskById(String id, String studentId) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tâche  non trouvée " + id));
+        if(!task.getStudentId().equals(studentId)){
+            throw new SecurityException("Accès refusé : cette tâche ne vous appartient pas");
+        }
         return taskMapper.toResponse(task);
     }
 
@@ -41,20 +43,23 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponse updateTask(String id, TaskUpdateRequest request) {
-        //log.info("Mise à jour tâche: {}", id);
+    public TaskResponse updateTask(String id, TaskUpdateRequest request, String studentId) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tâche non trouvée "+ id));
+        if(!task.getStudentId().equals(studentId)){
+            throw new SecurityException("Accès refusé : cette tâche ne vous appartient pas");
+        }
         taskMapper.updateEntity(request, task);
         return taskMapper.toResponse(taskRepository.save(task));
     }
 
     @Transactional
-    public void deleteTask(String id) {
-        //log.info("Suppression cascade tâche: {}", id);
-        if (!taskRepository.existsById(id))
-            throw new ResourceNotFoundException("Tâche non trouvée "+ id);
-
+    public void deleteTask(String id, String studentId) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tâche non trouvée "+ id));
+        if(!task.getStudentId().equals(studentId)){
+            throw new SecurityException("Accès refusé : cette tâche ne vous appartient pas");
+        }
         scheduleRepository.deleteByTaskId(id); // Supprime les schedules liés
         taskRepository.deleteById(id);
     }

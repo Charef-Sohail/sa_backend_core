@@ -7,36 +7,41 @@ import org.piteam.sa_backend_core.dto.ProfileResponse;
 import org.piteam.sa_backend_core.dto.ProfileUpdateRequest;
 import org.piteam.sa_backend_core.services.ProfileService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/student/{studentId}/profile") @RequiredArgsConstructor
+@RequestMapping("/api/profile") @RequiredArgsConstructor
 public class ProfileController {
     private final ProfileService profileService;
 
-    @PostMapping("/newProfile")
-    public ResponseEntity<ProfileResponse> createProfile(@Valid @RequestBody ProfileCreateRequest request, @PathVariable String studentId) {
-        ProfileResponse created = profileService.createProfile(request);
-        URI location = URI.create("/api/student/"+studentId+"/profile" + created.getStudentId());
+    @PostMapping
+    public ResponseEntity<ProfileResponse> createProfile(@Valid @RequestBody ProfileCreateRequest request, Authentication authentication) {
+        String studentId = authentication.getName();
+        ProfileResponse created = profileService.createProfile(request, studentId);
+        URI location = URI.create("/api/profile" + created.getStudentId());
         return ResponseEntity.created(location).body(created);
     }
 
     @GetMapping
-    public ResponseEntity<ProfileResponse> getProfile(@PathVariable String studentId) {
+    public ResponseEntity<ProfileResponse> getProfile(Authentication authentication) {
+        String studentId = authentication.getName();
         return ResponseEntity.ok(profileService.getProfileByStudentId(studentId));
     }
 
     @PatchMapping
     public ResponseEntity<ProfileResponse> updateProfile(
-            @PathVariable String studentId,
+            Authentication authentication,
             @Valid @RequestBody ProfileUpdateRequest request) {
+        String studentId = authentication.getName();
         return ResponseEntity.ok(profileService.updateProfile(studentId, request));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteProfile(@PathVariable String studentId) {
+    public ResponseEntity<Void> deleteProfile(Authentication authentication) {
+        String  studentId = authentication.getName();
         profileService.deleteProfile(studentId);
         return ResponseEntity.noContent().build();
     }

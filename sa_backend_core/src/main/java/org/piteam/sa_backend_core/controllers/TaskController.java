@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import org.springframework.security.core.Authentication;
 
-@RestController @RequestMapping("/api/student/{studentId}/tasks")
+@RestController @RequestMapping("/api/tasks")
 //@RequiredArgsConstructor
 public class TaskController {
 
@@ -20,32 +21,37 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @PostMapping("/newTask")
-    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskCreateRequest request, @PathVariable String studentId) {
-        TaskResponse created = taskService.createTask(request);
-        URI location = URI.create("/api/student/"+ studentId +"/tasks/" + created.getId());
+    @PostMapping
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskCreateRequest request, Authentication authentication) {
+        String studentId = authentication.getName();
+        TaskResponse created = taskService.createTask(request, studentId);
+        URI location = URI.create("/api/tasks/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 
 
     @GetMapping("/{taskId}")
-    public ResponseEntity<TaskResponse> getTask(@PathVariable String taskId) {
-        return ResponseEntity.ok(taskService.getTaskById(taskId));
+    public ResponseEntity<TaskResponse> getTask(@PathVariable String taskId, Authentication authentication) {
+        String userId = authentication.getName();
+        return ResponseEntity.ok(taskService.getTaskById(taskId, userId));
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponse>> getStudentTasks(@PathVariable String studentId) {
+    public ResponseEntity<List<TaskResponse>> getStudentTasks(Authentication authentication) {
+        String studentId = authentication.getName();
         return ResponseEntity.ok(taskService.getTasksByStudent(studentId));
     }
 
     @PatchMapping("/{taskId}")
-    public ResponseEntity<TaskResponse> updateTask(@PathVariable String taskId, @Valid @RequestBody TaskUpdateRequest request) {
-        return ResponseEntity.ok(taskService.updateTask(taskId, request));
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable String taskId, @Valid @RequestBody TaskUpdateRequest request, Authentication authentication) {
+        String studentId = authentication.getName();
+        return ResponseEntity.ok(taskService.updateTask(taskId, request, studentId));
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable String taskId) {
-        taskService.deleteTask(taskId);
+    public ResponseEntity<Void> deleteTask(@PathVariable String taskId, Authentication authentication) {
+        String studentId = authentication.getName();
+        taskService.deleteTask(taskId, studentId);
         return ResponseEntity.noContent().build();
     }
 

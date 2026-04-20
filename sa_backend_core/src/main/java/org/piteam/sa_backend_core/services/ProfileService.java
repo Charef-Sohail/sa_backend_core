@@ -18,27 +18,27 @@ public class ProfileService {
     private final ProfileMapper profileMapper;
 
     @Transactional
-    public ProfileResponse createProfile(ProfileCreateRequest request) {
+    public ProfileResponse createProfile(ProfileCreateRequest request, String studentId) {
 
-        if (profileRepository.existsByStudentId(request.getStudentId())) {
-            throw new IllegalStateException("Un profil existe déjà pour cet étudiant. Utilisez PATCH pour le modifier.");
+        if (profileRepository.existsByStudentId(studentId)) {
+            throw new IllegalStateException("Un profil existe déjà pour cet étudiant.");
         }
 
-        Profile profile = profileMapper.toEntity(request);
+        Profile profile = profileMapper.toEntity(request, studentId);
         Profile saved = profileRepository.save(profile);
         return profileMapper.toResponse(saved);
     }
 
     public ProfileResponse getProfileByStudentId(String studentId) {
         Profile profile = profileRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Profil non trouvée : "+ studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Profil non trouvée pour cet étudiant : "+ studentId));
         return profileMapper.toResponse(profile);
     }
 
     @Transactional
     public ProfileResponse updateProfile(String studentId, ProfileUpdateRequest request) {
         Profile profile = profileRepository.findByStudentId(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Profil non trouvée : "+ studentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Profil non trouvée pour cet étudiant : "+ studentId));
 
         profileMapper.updateEntity(request, profile);
         Profile updated = profileRepository.save(profile);
@@ -48,7 +48,7 @@ public class ProfileService {
     @Transactional
     public void deleteProfile(String studentId) {
         if (!profileRepository.existsByStudentId(studentId)) {
-            throw new ResourceNotFoundException("Profil non trouvée : "+ studentId);
+            throw new ResourceNotFoundException("Profil non trouvée pour cet étudiant: "+ studentId);
         }
         profileRepository.deleteByStudentId(studentId);
     }

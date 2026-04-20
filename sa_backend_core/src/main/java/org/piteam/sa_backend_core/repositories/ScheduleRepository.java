@@ -22,4 +22,9 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     // Ne pas déppaser le durée totale de la tâche
     @Query(value = "{ 'taskId': ?0 }", fields = "{ 'startTime': 1, 'endTime': 1 }")
     List<Schedule> findSchedulesWithTimesByTaskId(String taskId);
+
+     // Optionnel : Supprime l'ancien planning avant d'en générer un nouveau
+    void deleteByStudentId(String studentId);
 }
+
+
