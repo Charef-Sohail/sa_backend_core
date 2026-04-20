@@ -1,18 +1,14 @@
-package org.piteam.sa_backend_core.models;
+package org.piteam.sa_backend_core.dto;
 
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.Builder;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder @Data @AllArgsConstructor @NoArgsConstructor
-@Document(collection = "tasks")
-public class Task {
-    @Id
+@Data
+@Builder
+public class TaskResponse {
     private String id;
     private String studentId;
     private String title;
@@ -24,8 +20,9 @@ public class Task {
     private String category;
     private String status;
     private List<String> tags;
-    @CreatedDate
     private LocalDateTime createdAt;
-    @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    // Champ calculé métier (jamais stocké en base)
+    private Boolean isOverdue;
 }
