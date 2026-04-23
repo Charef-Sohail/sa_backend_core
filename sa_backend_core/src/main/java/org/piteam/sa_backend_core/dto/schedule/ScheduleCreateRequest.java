@@ -1,4 +1,4 @@
-package org.piteam.sa_backend_core.dto;
+package org.piteam.sa_backend_core.dto.schedule;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -6,9 +6,18 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ScheduleUpdateRequest {
+public class ScheduleCreateRequest {
+    @NotBlank(message = "studentId est requis")
+    private String studentId;
+
+    @NotBlank(message = "taskId est requis")
+    private String taskId;
+
+    @NotNull(message = "startTime est requis")
     @Future(message = "StartTime doit être dans le futur")
     private LocalDateTime startTime;
+
+    @NotNull(message = "endTime est requis")
     @Future(message = "EndTime doit être dans le futur")
     private LocalDateTime endTime;
 

@@ -1,4 +1,4 @@
-package org.piteam.sa_backend_core.dto;
+package org.piteam.sa_backend_core.dto.profile;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;

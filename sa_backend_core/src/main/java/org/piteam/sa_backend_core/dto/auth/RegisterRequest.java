@@ -1,4 +1,4 @@
-package org.piteam.sa_backend_core.dto;
+package org.piteam.sa_backend_core.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
