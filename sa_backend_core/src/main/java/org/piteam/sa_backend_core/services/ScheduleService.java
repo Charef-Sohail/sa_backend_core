@@ -2,9 +2,9 @@ package org.piteam.sa_backend_core.services;
 
 import lombok.RequiredArgsConstructor;
 import org.piteam.sa_backend_core.Mappers.ScheduleMapper;
-import org.piteam.sa_backend_core.dto.ScheduleCreateRequest;
-import org.piteam.sa_backend_core.dto.ScheduleResponse;
-import org.piteam.sa_backend_core.dto.ScheduleUpdateRequest;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleCreateRequest;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleResponse;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleUpdateRequest;
 import org.piteam.sa_backend_core.exceptions.ResourceNotFoundException;
 import org.piteam.sa_backend_core.models.Schedule;
 import org.piteam.sa_backend_core.models.Task;

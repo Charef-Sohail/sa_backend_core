@@ -2,10 +2,10 @@ package org.piteam.sa_backend_core.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.piteam.sa_backend_core.dto.LoginRequest;
-import org.piteam.sa_backend_core.dto.LoginResponse;
-import org.piteam.sa_backend_core.dto.RegisterRequest;
-import org.piteam.sa_backend_core.dto.RegisterResponse;
+import org.piteam.sa_backend_core.dto.auth.LoginRequest;
+import org.piteam.sa_backend_core.dto.auth.LoginResponse;
+import org.piteam.sa_backend_core.dto.auth.RegisterRequest;
+import org.piteam.sa_backend_core.dto.auth.RegisterResponse;
 import org.piteam.sa_backend_core.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

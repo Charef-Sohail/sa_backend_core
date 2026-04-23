@@ -1,9 +1,9 @@
 package org.piteam.sa_backend_core.controllers;
 
 import jakarta.validation.Valid;
-import org.piteam.sa_backend_core.dto.TaskCreateRequest;
-import org.piteam.sa_backend_core.dto.TaskResponse;
-import org.piteam.sa_backend_core.dto.TaskUpdateRequest;
+import org.piteam.sa_backend_core.dto.task.TaskCreateRequest;
+import org.piteam.sa_backend_core.dto.task.TaskResponse;
+import org.piteam.sa_backend_core.dto.task.TaskUpdateRequest;
 import org.piteam.sa_backend_core.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

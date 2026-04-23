@@ -1,8 +1,8 @@
 package org.piteam.sa_backend_core.Mappers;
 
-import org.piteam.sa_backend_core.dto.ScheduleCreateRequest;
-import org.piteam.sa_backend_core.dto.ScheduleResponse;
-import org.piteam.sa_backend_core.dto.ScheduleUpdateRequest;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleCreateRequest;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleResponse;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleUpdateRequest;
 import org.piteam.sa_backend_core.models.Schedule;
 import org.springframework.stereotype.Component;
 

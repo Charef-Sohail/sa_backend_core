@@ -1,10 +1,10 @@
 package org.piteam.sa_backend_core.services;
 
 import lombok.RequiredArgsConstructor;
-import org.piteam.sa_backend_core.dto.LoginRequest;
-import org.piteam.sa_backend_core.dto.LoginResponse;
-import org.piteam.sa_backend_core.dto.RegisterRequest;
-import org.piteam.sa_backend_core.dto.RegisterResponse;
+import org.piteam.sa_backend_core.dto.auth.LoginRequest;
+import org.piteam.sa_backend_core.dto.auth.LoginResponse;
+import org.piteam.sa_backend_core.dto.auth.RegisterRequest;
+import org.piteam.sa_backend_core.dto.auth.RegisterResponse;
 import org.piteam.sa_backend_core.exceptions.EmailAlreadyExistsException;
 import org.piteam.sa_backend_core.exceptions.InvalidCredentialsException;
 import org.piteam.sa_backend_core.models.Student;

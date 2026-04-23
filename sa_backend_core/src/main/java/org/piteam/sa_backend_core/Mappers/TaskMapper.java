@@ -1,8 +1,8 @@
 package org.piteam.sa_backend_core.Mappers;
 
-import org.piteam.sa_backend_core.dto.TaskCreateRequest;
-import org.piteam.sa_backend_core.dto.TaskResponse;
-import org.piteam.sa_backend_core.dto.TaskUpdateRequest;
+import org.piteam.sa_backend_core.dto.task.TaskCreateRequest;
+import org.piteam.sa_backend_core.dto.task.TaskResponse;
+import org.piteam.sa_backend_core.dto.task.TaskUpdateRequest;
 import org.piteam.sa_backend_core.models.Task;
 import org.springframework.stereotype.Component;
 

@@ -23,13 +23,15 @@ public class PlannerController {
     private ScheduleRepository scheduleRepository;
 
     @PostMapping("/generate")
-    public ResponseEntity<?> generateAndSaveSchedule(@RequestBody OptimizationRequestDTO requestDTO, Principal principal) {
+    public ResponseEntity<?> generateAndSaveSchedule(Principal principal) {
         try {
-            requestDTO.getStudent().setStudentId(principal.getName());
+            // Le Principal contient l'ID (ou l'email) de l'utilisateur grâce au Token JWT
+            String studentId = principal.getName();
 
-            // On récupère maintenant une liste de Schedules
-            List<Schedule> savedSchedules = plannerService.createAndSaveSchedule(requestDTO);
+            // On lance la machine !
+            List<Schedule> savedSchedules = plannerService.generateForStudent(studentId);
             return ResponseEntity.ok(savedSchedules);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erreur lors de la génération : " + e.getMessage());
         }

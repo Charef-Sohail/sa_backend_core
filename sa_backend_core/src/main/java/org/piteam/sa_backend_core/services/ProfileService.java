@@ -2,9 +2,9 @@ package org.piteam.sa_backend_core.services;
 
 import lombok.RequiredArgsConstructor;
 import org.piteam.sa_backend_core.Mappers.ProfileMapper;
-import org.piteam.sa_backend_core.dto.ProfileCreateRequest;
-import org.piteam.sa_backend_core.dto.ProfileResponse;
-import org.piteam.sa_backend_core.dto.ProfileUpdateRequest;
+import org.piteam.sa_backend_core.dto.profile.ProfileCreateRequest;
+import org.piteam.sa_backend_core.dto.profile.ProfileResponse;
+import org.piteam.sa_backend_core.dto.profile.ProfileUpdateRequest;
 import org.piteam.sa_backend_core.exceptions.ResourceNotFoundException;
 import org.piteam.sa_backend_core.models.Profile;
 import org.piteam.sa_backend_core.repositories.ProfileRepository;

@@ -2,9 +2,9 @@ package org.piteam.sa_backend_core.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.piteam.sa_backend_core.dto.ScheduleCreateRequest;
-import org.piteam.sa_backend_core.dto.ScheduleResponse;
-import org.piteam.sa_backend_core.dto.ScheduleUpdateRequest;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleCreateRequest;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleResponse;
+import org.piteam.sa_backend_core.dto.schedule.ScheduleUpdateRequest;
 import org.piteam.sa_backend_core.services.ScheduleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
