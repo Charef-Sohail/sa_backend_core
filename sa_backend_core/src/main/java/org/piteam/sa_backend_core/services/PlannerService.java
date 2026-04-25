@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,15 +78,35 @@ public class PlannerService {
         profileDTO.setEnergyScore(4); // On peut mettre une valeur par défaut pour l'instant
         request.setStudent(profileDTO);
 
+        // Mapping des tâches
         List<TaskDTO> taskDTOs = tasks.stream().map(t -> {
             TaskDTO d = new TaskDTO();
             d.setId(t.getId());
             d.setTitle(t.getTitle());
-            d.setDurationMinutes(t.getDuration()); // Vérifiez que c'est bien getDuration() ou getDurationMinutes()
-            d.setDifficulty(t.getDifficulty());
-            d.setPriority(t.getPriority());
-            // L'IA attend un format String ISO-8601 pour la date
+
+            // Sécurité pour la durée
+            d.setDurationMinutes(t.getDuration() != null ? t.getDuration() : 60);
+
+            // Sécurité pour la difficulté (Si c'est null, on met 1 par défaut)
+            d.setDifficulty(t.getDifficulty() != null ? t.getDifficulty() : 1);
+
+            // Sécurité pour la priorité (Si c'est null, on met NORMAL par défaut)
+            d.setPriority(t.getPriority() != null ? t.getPriority() : "NORMAL");
+
             d.setDeadline(t.getDeadline() != null ? t.getDeadline().toString() : ZonedDateTime.now().plusDays(7).toString());
+
+            // --- LOGIQUE POUR LES COURS FIXES ---
+            boolean isFixed = t.getTags() != null && t.getTags().contains("FIXED_EVENT");
+            d.setFixed(isFixed);
+
+            if (isFixed && t.getDeadline() != null) {
+                LocalDateTime endTime = t.getDeadline();
+                // Assurez-vous d'utiliser la durée sécurisée ici aussi !
+                int duration = t.getDuration() != null ? t.getDuration() : 60;
+                LocalDateTime startTime = endTime.minusMinutes(duration);
+                d.setStartTime(startTime.atZone(ZoneId.systemDefault()).toString());
+            }
+
             return d;
         }).collect(Collectors.toList());
 
