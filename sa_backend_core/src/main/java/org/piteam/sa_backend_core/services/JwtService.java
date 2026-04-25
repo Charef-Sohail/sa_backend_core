@@ -22,27 +22,28 @@ public class JwtService {
         this.jwtDecoder = jwtDecoder;
     }
 
-    public String generateToken(String id, String role) {
+    public String generateToken(String id, String email, String role) {
         Instant now = Instant.now();
 
-        JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build(); // ← add this
+        JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("sa_backend_core")
                 .issuedAt(now)
                 .expiresAt(now.plus(48, ChronoUnit.HOURS))
-                .subject(id)
+                .claim("id", id)
+                .claim("email", email)
                 .claim("role", role)
                 .build();
 
-        return jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue(); // ← pass header
+        return jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
     }
 
-    public String extractUserId(String token) {
-        return jwtDecoder.decode(token).getSubject();
+    public String extractId(String token) {
+        return jwtDecoder.decode(token).getClaim("id");
     }
 
-    public String extractRole(String token) {
-        return jwtDecoder.decode(token).getClaim("role");
-    }
+    public String extractEmail(String token) { return jwtDecoder.decode(token).getClaim("email"); }
+
+    public String extractRole(String token) { return jwtDecoder.decode(token).getClaim("role"); }
 }

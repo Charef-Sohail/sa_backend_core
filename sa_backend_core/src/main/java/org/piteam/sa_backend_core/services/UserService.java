@@ -34,12 +34,14 @@ public class UserService {
         student.setCreatedAt(Instant.now());
 
         User saved = userRepository.save(student);
+        String token = jwtService.generateToken(saved.getId(), saved.getEmail(), saved.getRole().name());
 
         return new RegisterResponse(
                 saved.getId(),
                 saved.getName(),
                 saved.getEmail(),
-                saved.getRole()
+                saved.getRole(),
+                token
         );
     }
     public LoginResponse login(LoginRequest request) {
@@ -50,7 +52,7 @@ public class UserService {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
-        String token = jwtService.generateToken(user.getId(), user.getRole().name());
+        String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole().name());
 
         return new LoginResponse(user.getId(), token, user.getEmail(), user.getRole().name());
     }
