@@ -14,4 +14,6 @@ public class AdminResponse {
     private String name;
     private String email;
     private Role role;
+    private Integer age;
+    private String University;
 }

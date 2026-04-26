@@ -41,6 +41,8 @@ public class UserService {
                 saved.getName(),
                 saved.getEmail(),
                 saved.getRole(),
+                saved.getAge(),
+                saved.getUniversity(),
                 token
         );
     }
@@ -54,6 +56,6 @@ public class UserService {
 
         String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole().name());
 
-        return new LoginResponse(user.getId(), token, user.getEmail(), user.getRole().name(), user.getName());
+        return new LoginResponse(user.getId(), token, user.getEmail(), user.getRole().name(), user.getName(), user.getAge(), user.getUniversity());
     }
 }

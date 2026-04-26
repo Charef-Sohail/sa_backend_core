@@ -10,4 +10,6 @@ public class AdminUpdateUserRequest {
     @Email(message = "Invalid email")
     private String email;
     private Role role;
+    private Integer age;
+    private String university;
 }

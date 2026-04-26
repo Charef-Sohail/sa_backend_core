@@ -11,5 +11,7 @@ public class RegisterResponse {
     private String name;
     private String email;
     private Role role;
+    private Integer age;
+    private String university;
     private String token;
 }

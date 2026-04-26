@@ -22,7 +22,9 @@ public class AdminService {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                user.getAge(),
+                user.getUniversity()
         );
     }
 
@@ -60,6 +62,12 @@ public class AdminService {
         }
         if (request.getRole() != null) {
             user.setRole(request.getRole());
+        }
+        if (request.getAge() != null) {
+            user.setAge(request.getAge());
+        }
+        if (request.getUniversity() != null) {
+            user.setUniversity(request.getUniversity());
         }
 
         User updated = userRepository.save(user);

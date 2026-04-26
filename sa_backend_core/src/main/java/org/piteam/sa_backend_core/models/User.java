@@ -20,6 +20,8 @@ public abstract class User {
     private String name;
     private Role role;
     private Instant createdAt;
+    private Integer age;
+    private String university;
 
     public abstract void login();
     public abstract void logout();
