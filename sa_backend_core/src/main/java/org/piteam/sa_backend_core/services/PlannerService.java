@@ -6,10 +6,12 @@ import org.piteam.sa_backend_core.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +25,8 @@ public class PlannerService {
     private SurveyRepository surveyRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private DailyStateRepository dailyStateRepository;
 
     public List<Schedule> generateForStudent(String studentId) {
         // 1. On cherche le profil de l'étudiant (Heure de réveil, etc.)
@@ -75,7 +79,19 @@ public class PlannerService {
         profileDTO.setWakeUpTime(survey.getWakeUpTime());
         profileDTO.setSleepTime(survey.getSleepTime());
         profileDTO.setPeakProductivity(survey.getPeakProductivity());
-        profileDTO.setEnergyScore(4); // On peut mettre une valeur par défaut pour l'instant
+
+        // --- NOUVELLE LOGIQUE MOOD TRACKING ---
+        // On cherche si l'étudiant a déclaré son humeur AUJOURD'HUI
+        Optional<DailyState> todayMood = dailyStateRepository.findByStudentIdAndDate(studentId, LocalDate.now());
+
+        if (todayMood.isPresent()) {
+            // Si oui, on prend l'énergie d'aujourd'hui (1 à 5)
+            profileDTO.setEnergyScore(todayMood.get().getEnergyScore());
+        } else {
+            // Sinon, on met 3 par défaut (Énergie normale)
+            profileDTO.setEnergyScore(3);
+        }
+
         request.setStudent(profileDTO);
 
         // Mapping des tâches

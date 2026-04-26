@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface DailyStateRepository extends MongoRepository<DailyState, String> {
     // Trouve l'état d'un étudiant spécifique pour une date précise
     Optional<DailyState> findByStudentIdAndDate(String studentId, LocalDate date);
+
 }

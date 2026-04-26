@@ -33,6 +33,9 @@ public class Schedule {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    // Permet de savoir si on a déjà envoyé une alerte pour ce créneau
+    private boolean notified = false;
+
     public long getDurationMinutes() {
         return startTime != null && endTime != null
                 ? java.time.Duration.between(startTime, endTime).toMinutes()
