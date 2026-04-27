@@ -89,6 +89,14 @@
             <artifactId>ical4j</artifactId>
             <version>3.2.14</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.0.0</version> <!-- Use latest 3.x version for Spring 7 -->
+        </dependency>
+
+
     </dependencies>
 
     <build>
