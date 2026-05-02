@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class ScheduleCreateRequest {
-    @NotBlank(message = "studentId est requis")
+
     private String studentId;
 
     @NotBlank(message = "taskId est requis")

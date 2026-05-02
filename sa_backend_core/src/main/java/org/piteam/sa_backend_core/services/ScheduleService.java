@@ -10,8 +10,10 @@ import org.piteam.sa_backend_core.models.Schedule;
 import org.piteam.sa_backend_core.models.Task;
 import org.piteam.sa_backend_core.repositories.ScheduleRepository;
 import org.piteam.sa_backend_core.repositories.TaskRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,14 @@ public class ScheduleService {
 
         if (!task.getStudentId().equals(studentId)) {
             throw new SecurityException("Le planning ne peut être associé à une tâche d'un autre étudiant");
+        }
+
+        if (request.getStartTime().isAfter(task.getDeadline())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le début doit être avant la deadline (" + task.getDeadline() + ")");
+        }
+
+        if (request.getEndTime().isAfter(task.getDeadline())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La fin doit être avant la deadline (" + task.getDeadline() + ")");
         }
 
         // Création
@@ -110,6 +120,13 @@ public class ScheduleService {
         Task task = taskRepository.findById(existing.getTaskId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tâche no trouvée " + existing.getTaskId()));
 
+        if (request.getStartTime().isAfter(task.getDeadline())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Le début doit être avant la deadline (" + task.getDeadline() + ")");
+        }
+
+        if (request.getEndTime().isAfter(task.getDeadline())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La fin doit être avant la deadline (" + task.getDeadline() + ")");
+        }
 
         scheduleMapper.updateEntity(request, existing);
         if(!existing.isTimeRangeValid()){

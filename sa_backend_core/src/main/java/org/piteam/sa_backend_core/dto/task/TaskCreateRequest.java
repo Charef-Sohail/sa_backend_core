@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class TaskCreateRequest {
-    @NotBlank(message = "L'ID étudiant est requis")
+
     private String studentId;
 
     @NotBlank(message = "Le titre est requis")

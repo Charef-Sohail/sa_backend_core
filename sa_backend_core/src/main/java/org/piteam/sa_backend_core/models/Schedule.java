@@ -1,6 +1,7 @@
 package org.piteam.sa_backend_core.models;
 
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 public class Schedule {
     @Id
     private String id;
+    @NotBlank(message = "studentId est requis")
     private String studentId;
     private String taskId;
     private LocalDateTime startTime;

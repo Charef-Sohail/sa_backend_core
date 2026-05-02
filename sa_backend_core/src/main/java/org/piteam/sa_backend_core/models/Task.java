@@ -1,5 +1,6 @@
 package org.piteam.sa_backend_core.models;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,7 @@ import java.util.List;
 public class Task {
     @Id
     private String id;
+    @NotBlank(message = "L'ID étudiant est requis")
     private String studentId;
     private String title;
     private String description;

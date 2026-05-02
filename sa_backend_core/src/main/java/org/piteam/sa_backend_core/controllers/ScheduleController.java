@@ -8,39 +8,48 @@ import org.piteam.sa_backend_core.dto.schedule.ScheduleUpdateRequest;
 import org.piteam.sa_backend_core.services.ScheduleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
-@RestController @RequestMapping("/api/schedules") @RequiredArgsConstructor
+@RestController @RequestMapping("/api/student/schedules") @RequiredArgsConstructor
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
 
     @PostMapping
     public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleCreateRequest request, Authentication authentication) {
-        String studentId = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        assert jwt != null;
+        String studentId = jwt.getClaim("id");
         ScheduleResponse created = scheduleService.createSchedule(request, studentId);
-        URI location = URI.create("/api/schedules/" + created.getId());
+        URI location = URI.create("/api/student/schedules/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 
     @GetMapping
     public ResponseEntity<List<ScheduleResponse>> getStudentSchedules(Authentication authentication) {
-        String studentId = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        assert jwt != null;
+        String studentId = jwt.getClaim("id");
         return ResponseEntity.ok(scheduleService.getSchedulesByStudent(studentId));
     }
 
     @GetMapping("/task/{taskId}")
     public ResponseEntity<List<ScheduleResponse>> getStudentTaskSchedules(@PathVariable String taskId,  Authentication authentication) {
-        String studentId = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        assert jwt != null;
+        String studentId = jwt.getClaim("id");
         return ResponseEntity.ok(scheduleService.getSchedulesByStudentAndTask(studentId, taskId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponse> getSchedule(@PathVariable String id, Authentication authentication) {
-        String studentId = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        assert jwt != null;
+        String studentId = jwt.getClaim("id");
         return ResponseEntity.ok(scheduleService.getScheduleByIdAndStudentId(id, studentId));
     }
 
@@ -49,13 +58,17 @@ public class ScheduleController {
             @PathVariable String id,
             @Valid @RequestBody ScheduleUpdateRequest request,
             Authentication authentication) {
-        String studentId = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        assert jwt != null;
+        String studentId = jwt.getClaim("id");
         return ResponseEntity.ok(scheduleService.updateSchedule(id, request, studentId));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable String id, Authentication authentication) {
-        String studentId = authentication.getName();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        assert jwt != null;
+        String studentId = jwt.getClaim("id");
         scheduleService.deleteSchedule(id, studentId);
         return ResponseEntity.noContent().build();
     }

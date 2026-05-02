@@ -11,9 +11,9 @@ import java.util.List;
 
 @Component
 public class TaskMapper {
-    public Task toEntity(TaskCreateRequest req, String userId) {
+    public Task toEntity(TaskCreateRequest req, String studentId) {
         return Task.builder()
-                .studentId(userId)
+                .studentId(studentId)
                 .title(req.getTitle())
                 .description(req.getDescription())
                 .priority(req.getPriority())
