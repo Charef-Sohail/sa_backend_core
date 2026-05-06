@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +21,8 @@ public abstract class User {
     private String name;
     private Role role;
     private Instant createdAt;
-    private Integer age;
+//  private Integer age;
+    private LocalDate birthDate;
     private String university;
 
     public abstract void login();

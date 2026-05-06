@@ -3,6 +3,8 @@ package org.piteam.sa_backend_core.dto.auth;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class RegisterRequest {
     @NotBlank(message = "Name is required")
@@ -20,5 +22,6 @@ public class RegisterRequest {
     @Max(value = 100, message = "Invalid age")
     private Integer age;
 
+    private LocalDate birthDate;
     private String university;
 }

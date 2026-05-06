@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    // calculate age
+    private Integer calculateAge(LocalDate birthDate) {
+        if (birthDate == null) return null;
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
     public RegisterResponse register(RegisterRequest request) {
         if(userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException("Email already in use: " + request.getEmail());
@@ -32,16 +39,19 @@ public class UserService {
         student.setEmail(request.getEmail());
         student.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         student.setCreatedAt(Instant.now());
+        student.setBirthDate(request.getBirthDate());
+        student.setUniversity(request.getUniversity());
 
         User saved = userRepository.save(student);
         String token = jwtService.generateToken(saved.getId(), saved.getEmail(), saved.getRole().name());
+
 
         return new RegisterResponse(
                 saved.getId(),
                 saved.getName(),
                 saved.getEmail(),
                 saved.getRole(),
-                saved.getAge(),
+                calculateAge(saved.getBirthDate()),
                 saved.getUniversity(),
                 token
         );
@@ -56,6 +66,6 @@ public class UserService {
 
         String token = jwtService.generateToken(user.getId(), user.getEmail(), user.getRole().name());
 
-        return new LoginResponse(user.getId(), token, user.getEmail(), user.getRole().name(), user.getName(), user.getAge(), user.getUniversity());
+        return new LoginResponse(user.getId(), token, user.getEmail(), user.getRole().name(), user.getName(), calculateAge(user.getBirthDate()), user.getUniversity());
     }
 }

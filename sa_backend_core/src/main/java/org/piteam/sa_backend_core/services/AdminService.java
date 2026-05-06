@@ -9,12 +9,20 @@ import org.piteam.sa_backend_core.models.User;
 import org.piteam.sa_backend_core.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
     private final UserRepository userRepository;
+
+    //calculate age
+    private Integer calculateAge(LocalDate birthDate) {
+        if (birthDate == null) return null;
+        return Period.between(birthDate, LocalDate.now()).getYears();
+    }
 
     private AdminResponse toResponse(User user) {
         return new AdminResponse(
@@ -23,7 +31,7 @@ public class AdminService {
                 user.getName(),
                 user.getEmail(),
                 user.getRole(),
-                user.getAge(),
+                calculateAge(user.getBirthDate()),
                 user.getUniversity()
         );
     }
@@ -63,8 +71,8 @@ public class AdminService {
         if (request.getRole() != null) {
             user.setRole(request.getRole());
         }
-        if (request.getAge() != null) {
-            user.setAge(request.getAge());
+        if (request.getBirthDate() != null) {
+            user.setBirthDate(request.getBirthDate());
         }
         if (request.getUniversity() != null) {
             user.setUniversity(request.getUniversity());
