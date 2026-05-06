@@ -11,4 +11,5 @@ public interface FaqRepository extends MongoRepository<Faq, String> {
 
     @Query("{ $or: [ { 'question': { $regex: ?0, $options: 'i' } }, { 'answer': { $regex: ?0, $options: 'i' } } ] }")
     List<Faq> searchByKeyword(String keyword);
+    List<Faq> findByAnswerIsNotNull();
 }

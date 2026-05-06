@@ -20,7 +20,7 @@ public class FaqService {
     // ── User ──────────────────────────────────────────
 
     public List<FaqResponse> getAll() {
-        return faqRepository.findAll()
+        return faqRepository.findByAnswerIsNotNull()
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -46,7 +46,24 @@ public class FaqService {
                 .toList();
     }
 
+    public FaqResponse submitQuestion(String question) {
+        Faq faq = new Faq();
+        faq.setQuestion(question);
+        faq.setAnswer(null);      // unanswered
+        faq.setCategory(null);
+        faq.setCreatedAt(Instant.now());
+        faq.setUpdatedAt(Instant.now());
+        return toResponse(faqRepository.save(faq));
+    }
+
     // ── Admin ────────────────────────────────────────────
+
+    public List<FaqResponse> getAllForAdmin() {
+        return faqRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
 
     public FaqResponse create(FaqRequest request) {
         Faq faq = new Faq();

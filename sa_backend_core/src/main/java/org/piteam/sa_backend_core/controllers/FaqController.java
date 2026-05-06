@@ -2,6 +2,7 @@ package org.piteam.sa_backend_core.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.piteam.sa_backend_core.dto.faq.FaqQuestionRequest;
 import org.piteam.sa_backend_core.dto.faq.FaqRequest;
 import org.piteam.sa_backend_core.dto.faq.FaqResponse;
 import org.piteam.sa_backend_core.services.FaqService;
@@ -40,7 +41,19 @@ public class FaqController {
         return ResponseEntity.ok(faqService.search(q));
     }
 
+    @PostMapping("/api/faq/questions")
+    public ResponseEntity<FaqResponse> submitQuestion(@RequestBody @Valid FaqQuestionRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(faqService.submitQuestion(request.getQuestion()));
+    }
+
     // ── Admin endpoints ──────────────────────────────────
+
+    @GetMapping("/api/admin/faq")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<FaqResponse>> getAllForAdmin() {
+        return ResponseEntity.ok(faqService.getAllForAdmin());
+    }
 
     @PostMapping("/api/admin/faq")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
